@@ -3,7 +3,11 @@ package com.dev.frontend.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.alligator.MyRestClient;
 import com.dev.frontend.panels.ComboBoxItem;
+import com.oracle.javafx.jmx.json.JSONWriter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 public class Services 
 {
@@ -20,8 +24,15 @@ public class Services
 		 * object parameter is the return object from calling method guiToObject on edit screen
 		 * and the type is identifier of the object type and may be TYPE_PRODUCT ,
 		 * TYPE_CUSTOMER or TYPE_SALESORDER 
-		 */ 
-		return null;
+		 */
+        JSONObject result=new JSONObject();
+        if(objectType==TYPE_PRODUCT) {
+            System.out.println("***********************SAVE " + object.toString());
+            result=MyRestClient.postRequest(MyRestClient.BASEURL + "backend/products",
+                    object.toString());
+        }
+
+        return result;
 	}
 	public static Object readRecordByCode(String code,int objectType)
 	{
@@ -31,8 +42,15 @@ public class Services
 		 * and also called after you save a record to re-bind the record again
 		 * the code parameter is the first column of the row you have selected
 		 * and the type is identifier of the object type and may be TYPE_PRODUCT ,
-		 * TYPE_CUSTOMER or TYPE_SALESORDER */ 
-		return null;
+		 * TYPE_CUSTOMER or TYPE_SALESORDER */
+
+        JSONObject result=new JSONObject();
+        if(objectType==TYPE_PRODUCT) {
+            System.out.println("***********************READ " + code);
+            result=MyRestClient.getRequest(MyRestClient.BASEURL + "backend/products/" + code);
+        }
+
+        return result;
 	}
 	public static boolean deleteRecordByCode(String code,int objectType)
 	{
@@ -42,7 +60,14 @@ public class Services
 		 * the code parameter is the code of (Customer - PRoduct ) or order number of Sales Order
 		 * and the type is identifier of the object type and may be TYPE_PRODUCT ,
 		 * TYPE_CUSTOMER or TYPE_SALESORDER
-		 */ 
+		 */
+        JSONObject result=new JSONObject();
+        if(objectType==TYPE_PRODUCT) {
+            System.out.println("***********************READ " + code);
+            result=MyRestClient.deleteRequest(MyRestClient.BASEURL + "backend/products/" + code);
+            System.out.println("**********************DELETE RESULT: "+result.toString());
+        }
+
 		return true;
 	}
 	
@@ -52,7 +77,14 @@ public class Services
 		/*
 		 * This method is called when you open any list screen and should return all records of the specified type
 		 */
-		return new ArrayList<Object>();
+        JSONArray result=new JSONArray();
+        if(objectType==TYPE_PRODUCT) {
+            System.out.println("***********************LIST ");
+            result=MyRestClient.getRequestForArray(MyRestClient.BASEURL + "backend/products");
+
+        }
+        System.out.println("LIST RESULT: "+result.toString());
+        return result;
 	}
 	public static List<ComboBoxItem> listCurrentRecordRefernces(int objectType) 
 	{	

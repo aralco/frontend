@@ -7,7 +7,9 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.alligator.MyRestClient;
 import com.dev.frontend.services.Services;
+import org.json.simple.JSONObject;
 
 public class EditProduct extends EditContentPanel
 {
@@ -16,6 +18,8 @@ public class EditProduct extends EditContentPanel
 	private JTextField txtDescription = new JTextField();
 	private JTextField txtQuantity = new JTextField();
 	private JTextField txtPrice = new JTextField();
+
+    private JSONObject product=new JSONObject();
 
 	public EditProduct()
 	{
@@ -82,20 +86,24 @@ public class EditProduct extends EditContentPanel
 	public boolean bindToGUI(Object o) 
 	{
 		// TODO by the candidate
-		/*
-		 * This method use the object returned by Services.readRecordByCode and should map it to screen widgets 
-		 */
+        System.out.println("*********bindToGUI PRODUCT"+o);
+        product=(JSONObject)o;
+        txtCode.setText(product.get("code").toString());
+        txtDescription.setText(product.get("description").toString());
+        txtPrice.setText(product.get("price").toString());
+        txtQuantity.setText(product.get("quantity").toString());
 		return false;
 	}
 
 	public Object guiToObject() 
 	{
 		// TODO by the candidate
-		/*
-		 * This method collect values from screen widgets and convert them to object of your type
-		 * This object will be used as a parameter of method Services.save
-		 */
-		return null;
+        System.out.println("******* GUI TO OBJECT PRODUCT "+product);
+        product.put("code",txtCode.getText());
+        product.put("description",txtDescription.getText());
+        product.put("price",txtPrice.getText());
+        product.put("quantity",txtQuantity.getText());
+		return product;
 	}
 
 	public int getObjectType()
@@ -115,10 +123,21 @@ public class EditProduct extends EditContentPanel
 		txtDescription.setText("");
 		txtPrice.setText("");
 		txtQuantity.setText("");
+        if(product!=null){
+            product.clear();
+        }
+
 	}
 
 	public void onInit()
 	{
+        /*TEST CLIENT
+        System.out.println("***************************EDITPRODUCT!!!!!!!");
+        JSONObject getResult=MyRestClient.getRequest("http://date.jsontest.com");
+        System.out.println("RESULT: "+getResult.toString());
 
-	}
+        System.out.println("POST!!!!!!!!!!!!!!!!!!!");
+        JSONObject postResult=MyRestClient.postRequest("https://posttestserver.com/post.php","{\"Nombre\":\"Lagarto\"}");
+        System.out.println("RESULT: "+postResult.toString());*/
+    }
 }
