@@ -82,7 +82,6 @@ public class MyRestClient {
 
             String responseLine="";
             while ((responseLine = br.readLine()) != null) {
-                System.out.println("&&&&&&&&&& "+responseLine);
                 response+=responseLine;
             }
             conn.disconnect();

@@ -22,6 +22,9 @@ import javax.swing.table.DefaultTableModel;
 import com.dev.frontend.panels.ComboBoxItem;
 import com.dev.frontend.services.Services;
 import com.dev.frontend.services.Utils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 public class EditSalesOrder extends EditContentPanel
 {
@@ -44,6 +47,8 @@ public class EditSalesOrder extends EditContentPanel
 		}
 	};
 	private JTable lines = new JTable(defaultTableModel);
+    private JSONObject salesOrder=new JSONObject();
+    private JSONArray orderLines=new JSONArray();
 
 	public EditSalesOrder()
 	{
@@ -210,23 +215,47 @@ public class EditSalesOrder extends EditContentPanel
 		double currentValue = Utils.parseDouble(txtTotalPrice.getText());
 		currentValue += totalPrice;
 		txtTotalPrice.setText("" + currentValue);
+
+        JSONObject orderLine=new JSONObject();
+        orderLine.put("product",productCode);
+        orderLine.put("quantity",qty);
+        orderLine.put("price",price);
+        orderLine.put("total",totalPrice);
+
+        orderLines.add(orderLine);
 	}
 	
 	public boolean bindToGUI(Object o) {
 		// TODO by the candidate
-		/*
-		 * This method use the object returned by Services.readRecordByCode and should map it to screen widgets 
-		 */
-		return false;
+        System.out.println("*********bindToGUI SALESORDER"+o);
+        salesOrder=(JSONObject)o;
+        txtOrderNum.setText(salesOrder.get("orderNumber").toString());
+        txtTotalPrice.setText(salesOrder.get("totalPrice").toString());
+        txtCustomer.setSelectedItem(salesOrder.get("customer.code").toString());
+        orderLines= (JSONArray) salesOrder.get("orderLines");
+
+        for (Object orderLineObject : orderLines) {
+            JSONObject orderLine= (JSONObject) orderLineObject;
+            defaultTableModel.addRow(new String[] {
+                    orderLine.get("product.code").toString(),
+                    orderLine.get("qtyquantity").toString(),
+                    orderLine.get("unitPrice").toString(),
+                    orderLine.get("totalPrice").toString() });
+        }
+
+        return false;
 	}
 
 	public Object guiToObject() {
 		// TODO by the candidate
-		/*
-		 * This method collect values from screen widgets and convert them to object of your type
-		 * This object will be used as a parameter of method Services.save
-		 */
-		return null;
+        System.out.println("******* GUI TO OBJECT SALESORDER "+salesOrder);
+        salesOrder.put("orderNumber", txtOrderNum.getText());
+        salesOrder.put("totalPrice", txtTotalPrice.getText());
+        ComboBoxItem selectedItem= (ComboBoxItem) txtCustomer.getSelectedItem();
+        salesOrder.put("customer",selectedItem.getKey());
+        salesOrder.put("orderLines",orderLines);
+
+        return salesOrder;
 	}
 
 	public int getObjectType()
@@ -247,6 +276,7 @@ public class EditSalesOrder extends EditContentPanel
 		txtQuantity.setText("");
 		txtTotalPrice.setText("");
 		defaultTableModel.setRowCount(0);
+        salesOrder.clear();
 	}
 
 	public void onInit()

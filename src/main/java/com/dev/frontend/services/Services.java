@@ -85,7 +85,24 @@ public class Services
 		 * This method is called when a Combo Box need to be initialized and should
 		 * return list of ComboBoxItem which contains code and description/name for all records of specified type
 		 */
-		return new ArrayList<ComboBoxItem>();
+        JSONArray items= MyRestClient.getRequestForArray(
+                Services.urlMap.get(new Integer(objectType)));
+        ArrayList<ComboBoxItem> comboBoxItems=new ArrayList<>();
+        for (Object item : items) {
+            JSONObject itemObject=(JSONObject)item;
+            String value=itemObject.get("code").toString();
+            String label=itemObject.get("code").toString();
+            if(objectType==TYPE_CUSTOMER){
+                label=itemObject.get("name").toString();
+            }
+            else if(objectType==TYPE_PRODUCT){
+                label=itemObject.get("description").toString();
+            }
+            System.out.println("******%%%%%%%%%%%%%%%%%%%%%% item: "+item.toString());
+            comboBoxItems.add(new ComboBoxItem(value,label));
+        }
+
+		return comboBoxItems;
 	}
 	public static double getProductPrice(String productCode) {
 		//TODO by the candidate
