@@ -1,7 +1,9 @@
 package com.dev.frontend.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.alligator.MyRestClient;
 import com.dev.frontend.panels.ComboBoxItem;
@@ -14,8 +16,15 @@ public class Services
 	public static final int TYPE_PRODUCT = 1;
 	public static final int TYPE_CUSTOMER = 2;
 	public static final int TYPE_SALESORDER = 3;
-	
-	
+
+    private static final Map<Integer, String> urlMap;
+    static
+    {
+        urlMap = new HashMap<>();
+        urlMap.put(TYPE_PRODUCT, MyRestClient.BASEURL+"backend/products");
+        urlMap.put(TYPE_CUSTOMER, MyRestClient.BASEURL+"backend/customers");
+        urlMap.put(TYPE_SALESORDER, MyRestClient.BASEURL+"backend/salesorders");
+    }
 	public static Object save(Object object,int objectType)
 	{
 		//TODO by the candidate 
@@ -25,14 +34,10 @@ public class Services
 		 * and the type is identifier of the object type and may be TYPE_PRODUCT ,
 		 * TYPE_CUSTOMER or TYPE_SALESORDER 
 		 */
-        JSONObject result=new JSONObject();
-        if(objectType==TYPE_PRODUCT) {
-            System.out.println("***********************SAVE " + object.toString());
-            result=MyRestClient.postRequest(MyRestClient.BASEURL + "backend/products",
-                    object.toString());
-        }
-
-        return result;
+        System.out.println("***********************SAVE " + object.toString());
+        return MyRestClient.postRequest(
+                Services.urlMap.get(new Integer(objectType)),
+                object.toString());
 	}
 	public static Object readRecordByCode(String code,int objectType)
 	{
@@ -44,13 +49,9 @@ public class Services
 		 * and the type is identifier of the object type and may be TYPE_PRODUCT ,
 		 * TYPE_CUSTOMER or TYPE_SALESORDER */
 
-        JSONObject result=new JSONObject();
-        if(objectType==TYPE_PRODUCT) {
-            System.out.println("***********************READ " + code);
-            result=MyRestClient.getRequest(MyRestClient.BASEURL + "backend/products/" + code);
-        }
-
-        return result;
+        System.out.println("***********************READ " + code);
+        return MyRestClient.getRequest(
+                Services.urlMap.get(new Integer(objectType))+"/" + code);
 	}
 	public static boolean deleteRecordByCode(String code,int objectType)
 	{
@@ -61,12 +62,8 @@ public class Services
 		 * and the type is identifier of the object type and may be TYPE_PRODUCT ,
 		 * TYPE_CUSTOMER or TYPE_SALESORDER
 		 */
-        JSONObject result=new JSONObject();
-        if(objectType==TYPE_PRODUCT) {
-            System.out.println("***********************READ " + code);
-            result=MyRestClient.deleteRequest(MyRestClient.BASEURL + "backend/products/" + code);
-            System.out.println("**********************DELETE RESULT: "+result.toString());
-        }
+        MyRestClient.deleteRequest(
+                 Services.urlMap.get(new Integer(objectType))+"/"+ code);
 
 		return true;
 	}
@@ -77,14 +74,9 @@ public class Services
 		/*
 		 * This method is called when you open any list screen and should return all records of the specified type
 		 */
-        JSONArray result=new JSONArray();
-        if(objectType==TYPE_PRODUCT) {
-            System.out.println("***********************LIST ");
-            result=MyRestClient.getRequestForArray(MyRestClient.BASEURL + "backend/products");
-
-        }
-        System.out.println("LIST RESULT: "+result.toString());
-        return result;
+        System.out.println("***********************LIST ");
+        return MyRestClient.getRequestForArray(
+                Services.urlMap.get(new Integer(objectType)));
 	}
 	public static List<ComboBoxItem> listCurrentRecordRefernces(int objectType) 
 	{	

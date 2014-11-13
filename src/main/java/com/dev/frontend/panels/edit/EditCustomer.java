@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.dev.frontend.services.Services;
+import org.json.simple.JSONObject;
 
 public class EditCustomer extends EditContentPanel 
 {
@@ -19,6 +20,8 @@ public class EditCustomer extends EditContentPanel
 	private JTextField txtPhone2 = new JTextField();
 	private JTextField txtCreditLimit = new JTextField();
 	private JTextField txtCurrentCredit = new JTextField();
+
+    private JSONObject customer=new JSONObject();
 
 	public EditCustomer() 
 	{
@@ -134,20 +137,37 @@ public class EditCustomer extends EditContentPanel
 	public boolean bindToGUI(Object o) 
 	{
 		// TODO by the candidate
-		/*
-		 * This method use the object returned by Services.readRecordByCode and should map it to screen widgets 
-		 */
+        System.out.println("*********bindToGUI Customer"+o);
+        customer=(JSONObject)o;
+        txtCode.setText(customer.get("code").toString());
+        txtName.setText(customer.get("name").toString());
+        txtAddress.setText(customer.get("address").toString());
+        txtPhone1.setText(customer.get("phone1").toString());
+        txtPhone2.setText(customer.get("phone2").toString());
+        txtCreditLimit.setText(customer.get("creditLimit").toString());
+        txtCurrentCredit.setText(customer.get("currentCredit").toString());
+
 		return false;
 	}
 
 	public Object guiToObject() 
 	{
 		// TODO by the candidate
-		/*
-		 * This method collect values from screen widgets and convert them to object of your type
-		 * This object will be used as a parameter of method Services.save
-		 */
-		return null;
+        System.out.println("******* GUI TO OBJECT CUSTOMER "+customer);
+        customer.put("code",txtCode.getText());
+        customer.put("name",txtName.getText());
+        customer.put("address",txtAddress.getText());
+        customer.put("phone1",txtPhone1.getText());
+        customer.put("phone2",txtPhone2.getText());
+        customer.put("creditLimit",txtCreditLimit.getText());
+        if(txtCurrentCredit.getText().length()>0){
+            customer.put("currentCredit",txtCurrentCredit.getText());
+        }
+        else{
+            customer.put("currentCredit","0");
+        }
+
+		return customer;
 	}
 
 	@Override
@@ -164,13 +184,14 @@ public class EditCustomer extends EditContentPanel
 
 	public void clear() 
 	{
-		txtCode.setText("");
-		txtName.setText("");
-		txtPhone1.setText("");
-		txtPhone2.setText("");
-		txtAddress.setText("");
-		txtCreditLimit.setText("");
-		txtCurrentCredit.setText("");
+        txtCode.setText("");
+        txtName.setText("");
+        txtAddress.setText("");
+        txtPhone1.setText("");
+        txtPhone2.setText("");
+        txtCreditLimit.setText("");
+        txtCurrentCredit.setText("");
+        customer.clear();
 	}
 
 	public void onInit() 
