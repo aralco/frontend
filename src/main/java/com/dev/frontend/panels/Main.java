@@ -61,7 +61,7 @@ public class Main implements PanelSwitcher {
 
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 500);
+		frame.setBounds(100, 100, 500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		panel = new JPanel(new CardLayout());
 		frame.add(panel);

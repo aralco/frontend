@@ -66,8 +66,8 @@ public class ListContentPanel extends JPanel implements HasBusinessPresenter {
 				new ListSelectionListener() {
 
 					public void valueChanged(ListSelectionEvent e) {
-						if (!e.getValueIsAdjusting())
-							goToRecord(table.getValueAt(table.getSelectedRow(),
+						if (!e.getValueIsAdjusting() && table.getSelectedRow()>-1)
+                        goToRecord(table.getValueAt(table.getSelectedRow(),
 									0).toString());
 					}
 				});
