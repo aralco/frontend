@@ -238,7 +238,7 @@ public class EditSalesOrder extends EditContentPanel
             JSONObject orderLine= (JSONObject) orderLineObject;
             defaultTableModel.addRow(new String[] {
                     orderLine.get("product.code").toString(),
-                    orderLine.get("qtyquantity").toString(),
+                    orderLine.get("quantity").toString(),
                     orderLine.get("unitPrice").toString(),
                     orderLine.get("totalPrice").toString() });
         }
@@ -250,7 +250,7 @@ public class EditSalesOrder extends EditContentPanel
 		// TODO by the candidate
         System.out.println("******* GUI TO OBJECT SALESORDER "+salesOrder);
         salesOrder.put("orderNumber", txtOrderNum.getText());
-        salesOrder.put("totalPrice", txtTotalPrice.getText());
+        salesOrder.put("totalPrice", new Double(txtTotalPrice.getText()));
         ComboBoxItem selectedItem= (ComboBoxItem) txtCustomer.getSelectedItem();
         salesOrder.put("customer",selectedItem.getKey());
         salesOrder.put("orderLines",orderLines);
