@@ -1,10 +1,11 @@
 package com.dev.frontend.panels.list;
 
-import java.util.List;
-
 import com.dev.frontend.services.Services;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
+import java.util.List;
+import java.util.Map;
 
 
 public class SalesOrderDataModel extends ListDataModel
@@ -36,7 +37,9 @@ public class SalesOrderDataModel extends ListDataModel
         for(int i = 0; i < jsonList.size(); i++){
             JSONObject jsonObject=(JSONObject)jsonList.get(i);
             data[i][0]= jsonObject.get("orderNumber").toString();
-            data[i][1]="("+jsonObject.get("customer.code").toString()+") "+jsonObject.get("customer.name");
+//            data[i][1]="("+jsonObject.get("customer.code").toString()+")"+jsonObject.get("customer.name");
+			Map customer = (Map)jsonObject.get("customer");
+            data[i][1]="("+customer.get("code").toString()+")"+customer.get("name").toString();
             data[i][2]=jsonObject.get("totalPrice").toString();
         }
         return data;

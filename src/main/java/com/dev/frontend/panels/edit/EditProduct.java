@@ -1,15 +1,10 @@
 package com.dev.frontend.panels.edit;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
-import com.alligator.MyRestClient;
 import com.dev.frontend.services.Services;
 import org.json.simple.JSONObject;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class EditProduct extends EditContentPanel
 {

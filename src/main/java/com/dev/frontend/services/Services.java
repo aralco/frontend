@@ -1,15 +1,14 @@
 package com.dev.frontend.services;
 
+import com.dev.frontend.client.MyRestClient;
+import com.dev.frontend.panels.ComboBoxItem;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.alligator.MyRestClient;
-import com.dev.frontend.panels.ComboBoxItem;
-import com.oracle.javafx.jmx.json.JSONWriter;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 public class Services 
 {
@@ -21,11 +20,11 @@ public class Services
     static
     {
         urlMap = new HashMap<>();
-        urlMap.put(TYPE_PRODUCT, MyRestClient.BASEURL+"backend/products");
-        urlMap.put(TYPE_CUSTOMER, MyRestClient.BASEURL+"backend/customers");
-        urlMap.put(TYPE_SALESORDER, MyRestClient.BASEURL+"backend/salesorders");
+        urlMap.put(TYPE_PRODUCT, MyRestClient.BASEURL+"backend/product");
+        urlMap.put(TYPE_CUSTOMER, MyRestClient.BASEURL+"backend/customer");
+        urlMap.put(TYPE_SALESORDER, MyRestClient.BASEURL+"backend/salesorder");
     }
-	public static Object save(Object object,int objectType)
+        public static Object save(Object object,int objectType)
 	{
 		//TODO by the candidate 
 		/*
@@ -36,7 +35,7 @@ public class Services
 		 */
         System.out.println("***********************SAVE " + object.toString());
         return MyRestClient.postRequest(
-                Services.urlMap.get(new Integer(objectType)),
+                Services.urlMap.get(objectType),
                 object.toString());
 	}
 	public static Object readRecordByCode(String code,int objectType)
@@ -51,7 +50,7 @@ public class Services
 
         System.out.println("***********************READ " + code);
         return MyRestClient.getRequest(
-                Services.urlMap.get(new Integer(objectType))+"/" + code);
+                Services.urlMap.get(objectType)+"/" + code);
 	}
 	public static boolean deleteRecordByCode(String code,int objectType)
 	{
@@ -63,7 +62,7 @@ public class Services
 		 * TYPE_CUSTOMER or TYPE_SALESORDER
 		 */
         MyRestClient.deleteRequest(
-                 Services.urlMap.get(new Integer(objectType))+"/"+ code);
+                 Services.urlMap.get(objectType)+"/"+ code);
 
 		return true;
 	}
@@ -76,7 +75,7 @@ public class Services
 		 */
         System.out.println("***********************LIST ");
         return MyRestClient.getRequestForArray(
-                Services.urlMap.get(new Integer(objectType)));
+                Services.urlMap.get(objectType));
 	}
 	public static List<ComboBoxItem> listCurrentRecordRefernces(int objectType) 
 	{	
@@ -86,7 +85,7 @@ public class Services
 		 * return list of ComboBoxItem which contains code and description/name for all records of specified type
 		 */
         JSONArray items= MyRestClient.getRequestForArray(
-                Services.urlMap.get(new Integer(objectType)));
+                Services.urlMap.get(objectType));
         ArrayList<ComboBoxItem> comboBoxItems=new ArrayList<>();
         for (Object item : items) {
             JSONObject itemObject=(JSONObject)item;
@@ -109,6 +108,9 @@ public class Services
 		/*
 		 * This method is used to get unit price of product with the code passed as a parameter
 		 */
-		return 1;
+        System.out.println("***********************READ " + productCode);
+        JSONObject product = MyRestClient.getRequest(
+                Services.urlMap.get(1) + "/" + productCode);
+        return Double.parseDouble(product.get("price").toString());
 	}
 }

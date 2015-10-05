@@ -1,30 +1,18 @@
 package com.dev.frontend.panels.edit;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
-
 import com.dev.frontend.panels.ComboBoxItem;
 import com.dev.frontend.services.Services;
 import com.dev.frontend.services.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Map;
 
 public class EditSalesOrder extends EditContentPanel
 {
@@ -227,17 +215,19 @@ public class EditSalesOrder extends EditContentPanel
 	
 	public boolean bindToGUI(Object o) {
 		// TODO by the candidate
-        System.out.println("*********bindToGUI SALESORDER"+o);
+        System.out.println("*********bindToGUI SALESORDER" + o);
         salesOrder=(JSONObject)o;
         txtOrderNum.setText(salesOrder.get("orderNumber").toString());
         txtTotalPrice.setText(salesOrder.get("totalPrice").toString());
-        txtCustomer.setSelectedItem(salesOrder.get("customer.code").toString());
+		Map customerMap = (Map)salesOrder.get("customer");
+        txtCustomer.setSelectedItem(customerMap.get("code"));
         orderLines= (JSONArray) salesOrder.get("orderLines");
 
         for (Object orderLineObject : orderLines) {
             JSONObject orderLine= (JSONObject) orderLineObject;
+			Map productMap = (Map)orderLine.get("product");
             defaultTableModel.addRow(new String[] {
-                    orderLine.get("product.code").toString(),
+					productMap.get("code").toString(),
                     orderLine.get("quantity").toString(),
                     orderLine.get("unitPrice").toString(),
                     orderLine.get("totalPrice").toString() });
@@ -276,7 +266,8 @@ public class EditSalesOrder extends EditContentPanel
 		txtQuantity.setText("");
 		txtTotalPrice.setText("");
 		defaultTableModel.setRowCount(0);
-        salesOrder.clear();
+		salesOrder.clear();
+		orderLines.clear();
 	}
 
 	public void onInit()

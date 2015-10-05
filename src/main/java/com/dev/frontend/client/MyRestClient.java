@@ -1,4 +1,4 @@
-package com.alligator;
+package com.dev.frontend.client;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,9 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by ariel on 12/11/14.
- */
 public class MyRestClient {
     public static String BASEURL="http://localhost:8080/";
 
